@@ -16,11 +16,14 @@ movie2$.subscribe(() => dispatcher.next({ movieId: 2 }));
 
 const dispatcher = new Subject<Movie>();
 
-const actions$ = dispatcher.asObservable().pipe(
-  tap(({ movieId }) => setButtonEmoji(movieId)),
-  mergeMap(movie => toggleStatus(movie.movieId))
-);
+agent.on('movie/click', ({ event: { payload: { movieId } } }) => {
+  setButtonEmoji(movieId);
+  return toggleStatus(movieId);
+},  {type: 'movie/update'});
 
-actions$.subscribe((data: Movie) => {
+agent.filter('movie/update', ({ event: { payload: data } }) => {
   addToOutput(`Movie ${data.movieId}; event: ${data.event}, state: ${data.status}`);
 });
+
+agent.subscribe(dispatcher, 'movie/click');
+

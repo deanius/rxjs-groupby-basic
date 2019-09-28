@@ -46,6 +46,6 @@ export const toggleStatus = (movieId: number): Observable<Movie> => {
   // @ts-ignore
   return concat(
     after(0, { movieId, status: databaseState[button], event: 'setLocalState' }),
-    after(randomDelay, { movieId, status: databaseState[button], event: 'dbReply' })
+    after(randomDelay, { movieId, status: databaseState[button], event: 'dbReply' }),
   );
 };
