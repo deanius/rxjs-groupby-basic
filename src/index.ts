@@ -19,7 +19,7 @@ const dispatcher = new Subject<Movie>();
 agent.on('movie/click', ({ event: { payload: { movieId } } }) => {
   setButtonEmoji(movieId);
   return toggleStatus(movieId);
-},  {type: 'movie/update'});
+},  {type: 'movie/update', concurrency: 'cutoff' });
 
 agent.filter('movie/update', ({ event: { payload: data } }) => {
   addToOutput(`Movie ${data.movieId}; event: ${data.event}, state: ${data.status}`);
