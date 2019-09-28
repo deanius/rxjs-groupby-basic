@@ -7,12 +7,13 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack --watch",
     "build": "webpack",
-    "serve": "live-server dist"
+    "start": "webpack && live-server dist"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "rx-helper": "^2.0.7",
     "rxjs": "^6.5.2"
   },
   "devDependencies": {

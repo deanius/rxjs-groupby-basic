@@ -1,5 +1,7 @@
-import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { Observable, of, concat } from 'rxjs';
+import { delay, startWith } from 'rxjs/operators';
+// @ts-ignore
+import { after } from 'rx-helper';
 
 let globalButtonState = {
   button1: false,
@@ -32,12 +34,18 @@ export const clearOutput = () => {
 export interface Movie {
   movieId: number;
   status?: boolean;
+  event?: string;
 }
 
 export const toggleStatus = (movieId: number): Observable<Movie> => {
   const button = `button${movieId}`;
   const randomDelay = Math.floor(Math.random() * 2000);
+
   databaseState[button] = !databaseState[button];
 
-  return of({ movieId, status: databaseState[button] }).pipe(delay(randomDelay));
+  // @ts-ignore
+  return concat(
+    after(0, { movieId, status: databaseState[button], event: 'setLocalState' }),
+    after(randomDelay, { movieId, status: databaseState[button], event: 'dbReply' })
+  );
 };

@@ -1,6 +1,7 @@
 import { Observable, fromEvent, Subject } from 'rxjs';
 import { tap, mergeMap } from 'rxjs/operators';
 import { setButtonEmoji, clearOutput, addToOutput, Movie, toggleStatus } from './helpers';
+import { agent } from 'rx-helper';
 
 document.querySelector('#clear-output').addEventListener('click', clearOutput);
 
@@ -21,5 +22,5 @@ const actions$ = dispatcher.asObservable().pipe(
 );
 
 actions$.subscribe((data: Movie) => {
-  addToOutput(`Plain mergeMap: Movie ${data.movieId} complete; state: ${data.status}`);
+  addToOutput(`Movie ${data.movieId}; event: ${data.event}, state: ${data.status}`);
 });
