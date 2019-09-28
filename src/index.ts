@@ -16,14 +16,22 @@ movie2$.subscribe(() => dispatcher.next({ movieId: 2 }));
 
 const dispatcher = new Subject<Movie>();
 
-agent.on('movie/click', ({ event: { payload: { movieId } } }) => {
+// prettier-ignore
+const updateMovie = ({ event: { payload: { movieId } } }) => {
   setButtonEmoji(movieId);
   return toggleStatus(movieId);
-},  {type: 'movie/update', concurrency: 'cutoff' });
+};
 
+const movieIds = [1,2]
+for(let movieId of movieIds) {
+  agent.on(
+    ({ event: { type, payload } }) => type === 'movie/click' && payload.movieId === movieId,
+    updateMovie,
+    { type: 'movie/update', concurrency: 'cutoff' }
+  );
+}
 agent.filter('movie/update', ({ event: { payload: data } }) => {
   addToOutput(`Movie ${data.movieId}; event: ${data.event}, state: ${data.status}`);
 });
 
 agent.subscribe(dispatcher, 'movie/click');
-
