@@ -22,13 +22,16 @@ const updateMovie = ({ event: { payload: { movieId } } }) => {
   return toggleStatus(movieId);
 };
 
-const movieIds = [1,2]
-for(let movieId of movieIds) {
-  agent.on(
-    ({ event: { type, payload } }) => type === 'movie/click' && payload.movieId === movieId,
-    updateMovie,
-    { type: 'movie/update', concurrency: 'cutoff' }
-  );
+const matchesMovieClickOn = movieId => {
+  return ({ event: { type, payload } }) => type === 'movie/click' && payload.movieId === movieId;
+};
+
+const movieIds = [1, 2];
+for (let movieId of movieIds) {
+  agent.on(matchesMovieClickOn(movieId), updateMovie, {
+    type: 'movie/update',
+    concurrency: 'cutoff'
+  });
 }
 agent.filter('movie/update', ({ event: { payload: data } }) => {
   addToOutput(`Movie ${data.movieId}; event: ${data.event}, state: ${data.status}`);
