@@ -1,6 +1,7 @@
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
-
+// @ts-ignore
+import { after } from 'rx-helper';
 let globalButtonState = {
   button1: false,
   button2: false
@@ -38,6 +39,8 @@ export const toggleStatus = (movieId: number): Observable<Movie> => {
   const button = `button${movieId}`;
   const randomDelay = Math.floor(Math.random() * 2000);
   databaseState[button] = !databaseState[button];
+
+  addToOutput(`Toggling local state for ${movieId}, state: ${databaseState[button]}`);
 
   return of({ movieId, status: databaseState[button] }).pipe(delay(randomDelay));
 };
